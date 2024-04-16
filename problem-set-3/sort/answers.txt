@@ -1,0 +1,27 @@
+sort1 uses: Bubble Sort
+
+How do you know?: Much like Selection Sort, Bubble Sort takes around the same time to
+                  sort for a random list. But when the list is already sorted (the best
+                  case scenario), this sort performs the fastest, with an order of n. This
+                  is demonstrated when using ./sort1 on the biggest text files, where it
+                  takes the longest of the three on a reversed list, but is the fastest on
+                  a sorted list.
+
+sort2 uses: Merge Sort
+
+How do you know?: In most scenearios, except for the best case of already sorted,
+                  this is the sort that performs the best in terms of completion time.
+                  It is the fastest to finish any sorting, except for a list that is already
+                  sorted as it still takes O(n log n) in the best case scenario, as opposed to
+                  an order of O(n) for bubble sort. On average, it takes less than 2 seconds for
+                  all three scenarios of random, reversed, and sorted lists.
+
+sort3 uses: Selection Sort
+
+How do you know?: It takes around the same time to sort a randomly sorted text file
+                  as it does in an already sorted text file. Selection sort is the
+                  only sort of the three that has a lower bound that is in the order
+                  of n squared. This can be shown by running ./sort3 on any unsorted
+                  list and a sorted list. The amount of time it takes to finish in each
+                  scenario is always around the same time on average, regardless of whether
+                  the list is already sorted or not.
