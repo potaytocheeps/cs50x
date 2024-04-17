@@ -54,12 +54,13 @@ int main(int argc, string argv[])
         candidates[i] = argv[i + 1];
     }
 
-    // Clear graph of locked in pairs
+    // Clear graph of locked in pairs and initialize preferences to 0
     for (int i = 0; i < candidate_count; i++)
     {
         for (int j = 0; j < candidate_count; j++)
         {
             locked[i][j] = false;
+            preferences[i][j] = 0;
         }
     }
 
@@ -118,7 +119,25 @@ bool vote(int rank, string name, int ranks[])
 // Update preferences given one voter's ranks
 void record_preferences(int ranks[])
 {
-    // TODO
+    // The elements in ranks[] are the indexes of each candidate in their order of appearance
+    // in candidates[]
+
+    // Iterate over ranks[] for each of the voter's candidate preferences. The last rank is
+    // skipped because that candidate is not preferred over any others
+    for (int i = 0; i < candidate_count - 1; i++)
+    {
+        int candidate_preferenced = ranks[i];
+
+        // Compare the current candidate with every other candidate in ranks[]. This allows
+        // for tracking which candidates are preferred over others, and avoids repeating pairs
+        // or comparing a candidate against themselves
+        for (int j = i + 1; j < candidate_count; j++)
+        {
+            int other_candidate = ranks[j];
+            preferences[candidate_preferenced][other_candidate]++;
+        }
+    }
+
     return;
 }
 
