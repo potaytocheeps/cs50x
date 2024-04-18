@@ -253,6 +253,32 @@ bool pair_can_be_locked(int winner, int loser, int target)
 // Print the winner of the election
 void print_winner(void)
 {
-    // TODO
+    bool is_winner = false;
+
+    // Iterate over locked array to determine the source of the graph
+    for (int i = 0; i < candidate_count; i++)
+    {
+        // Reset every iteration until winner is found
+        is_winner = true;
+
+        for (int j = 0; j < candidate_count; j++)
+        {
+            // If the current candidate i appears as a loser to any candidate j,
+            // then this candidate cannot be the winner of the election
+            if (locked[j][i])
+            {
+                is_winner = false;
+                break;
+            }
+        }
+
+        if (is_winner)
+        {
+            // Print the name of the winning candidate
+            printf("%s\n", candidates[i]);
+            break;
+        }
+    }
+
     return;
 }
