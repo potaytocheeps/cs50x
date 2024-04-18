@@ -32,6 +32,7 @@ void add_pairs(void);
 void sort_pairs(void);
 int strength_of_victory(pair candidate_pair);
 void lock_pairs(void);
+bool pair_can_be_locked(int winner, int loser, int target);
 void print_winner(void);
 
 int main(int argc, string argv[])
@@ -212,8 +213,41 @@ int strength_of_victory(pair candidate_pair)
 // Lock pairs into the candidate graph in order, without creating cycles
 void lock_pairs(void)
 {
-    // TODO
+    // Iterate over pairs to check whether it can be locked
+    for (int i = 0; i < pair_count; i++)
+    {
+        if (pair_can_be_locked(pairs[i].winner, pairs[i].loser, pairs[i].loser))
+        {
+            locked[pairs[i].winner][pairs[i].loser] = true;
+        }
+    }
+
     return;
+}
+
+// Determine whether a pair can be locked without creating any cycles
+bool pair_can_be_locked(int winner, int loser, int target)
+{
+    // Base case for recursion to avoid creating a cycle
+    if (target == winner)
+    {
+        // If the target of the original arrow is the source of the graph,
+        // then the pair cannot be locked as it will create a cycle
+        return false;
+    }
+
+    // Determine if the winner of this pair has lost to another candidate
+    for (int i = 0; i < candidate_count; i++)
+    {
+        // If there are any arrows pointing at winner, backtrack to that pair
+        // of candidates to determine if a cycle will be created
+        if (locked[i][winner])
+        {
+            return pair_can_be_locked(i, winner, target);
+        }
+    }
+
+    return true;
 }
 
 // Print the winner of the election
