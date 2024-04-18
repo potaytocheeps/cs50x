@@ -30,6 +30,7 @@ bool vote(int rank, string name, int ranks[]);
 void record_preferences(int ranks[]);
 void add_pairs(void);
 void sort_pairs(void);
+int strength_of_victory(pair candidate_pair);
 void lock_pairs(void);
 void print_winner(void);
 
@@ -172,8 +173,40 @@ void add_pairs(void)
 // Sort pairs in decreasing order by strength of victory
 void sort_pairs(void)
 {
-    // TODO
+    int number_of_swaps = -1;
+
+    // Use bubble sort to sort the array
+    for (int i = 0, length = pair_count; i < length - 1; length--)
+    {
+        // If no swaps have been made, that means the array is already sorted
+        if (number_of_swaps == 0)
+        {
+            break;
+        }
+
+        // Reset number of swaps made each iteration
+        number_of_swaps = 0;
+
+        for (int j = i; j < length - 1; j++)
+        {
+            if (strength_of_victory(pairs[j]) < strength_of_victory(pairs[j + 1]))
+            {
+                // Swap the pairs, so that the highest gets pushed to the beginning
+                pair temp = pairs[j];
+                pairs[j] = pairs[j + 1];
+                pairs[j + 1] = temp;
+                number_of_swaps++;
+            }
+        }
+    }
+
     return;
+}
+
+// Declare a function to get the strength of victory for a given pair
+int strength_of_victory(pair candidate_pair)
+{
+    return preferences[candidate_pair.winner][candidate_pair.loser];
 }
 
 // Lock pairs into the candidate graph in order, without creating cycles
