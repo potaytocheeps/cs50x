@@ -1,5 +1,6 @@
 #include <cs50.h>
 #include <stdio.h>
+#include <string.h>
 
 // Max voters and candidates
 #define MAX_VOTERS 100
@@ -126,7 +127,19 @@ int main(int argc, string argv[])
 // Record preference if vote is valid
 bool vote(int voter, int rank, string name)
 {
-    // TODO
+    // Iterate over candidates[] to see if the given name is valid
+    for (int i = 0; i < candidate_count; i++)
+    {
+        // Check if the given name matches a candidate's name
+        if (strcmp(candidates[i].name, name) == 0)
+        {
+            // Add the index value of that candidate to preferences
+            preferences[voter][rank] = i;
+            // Return true to indicate the vote was valid
+            return true;
+        }
+    }
+
     return false;
 }
 
