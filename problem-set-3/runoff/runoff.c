@@ -193,12 +193,16 @@ int find_min(void)
     // Hold the minimum number of votes
     int min = MAX_VOTERS + 1;
 
-    // Find the minimmum number of votes any candidate has
+    // Find the minimmum number of votes any candidate still in the election has
     for (int i = 0; i < candidate_count; i++)
     {
-        if (candidates[i].votes < min)
+        // Ignore any eliminated candidates
+        if (!candidates[i].eliminated)
         {
-            min = candidates[i].votes;
+            if (candidates[i].votes < min)
+            {
+                min = candidates[i].votes;
+            }
         }
     }
 
