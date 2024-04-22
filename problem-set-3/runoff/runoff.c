@@ -146,7 +146,26 @@ bool vote(int voter, int rank, string name)
 // Tabulate votes for non-eliminated candidates
 void tabulate(void)
 {
-    // TODO
+    int candidate_index = -1;
+
+    // Count the total number of times a candidate was a voter's first preference
+    for (int voter = 0; voter < voter_count; voter++)
+    {
+        for (int rank = 0; rank < candidate_count; rank++)
+        {
+            candidate_index = preferences[voter][rank];
+
+            // Increase candidate's total vote count if they haven't been eliminated
+            if (!candidates[candidate_index].eliminated)
+            {
+                candidates[candidate_index].votes++;
+
+                // Continue to the next voter
+                break;
+            }
+        }
+    }
+
     return;
 }
 
