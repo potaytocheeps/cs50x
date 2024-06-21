@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 
 #include "dictionary.h"
 
@@ -18,18 +19,28 @@ typedef struct node
 // TODO: Choose number of buckets in hash table
 const unsigned int N = 26;
 
+// Track size of dictionary
+int dictionary_size = 0;
+
 // Hash table
 node *table[N];
 
 // Returns true if word is in dictionary, else false
 bool check(const char *word)
 {
-    // TODO
-    // Call hash function on word to get a hash value.
-    // Use the hash value to access the bucket in the array in which this word should be located.
-    // Traverse the linked list and compare each node to the word to see if it has been found
-    // in the dictionary. If I get to the end, and the word wasn't found, then it is not in the
-    // dictionary. Return false if so. Otherwise, return true if found.
+    // Call hash function on word to get a hash value
+    unsigned int index = hash(word);
+
+    // Traverse the linked list located at the hash value in the array
+    for (node *list = table[index]; list != NULL; list = list->next)
+    {
+        // Compare each node to the word to see if it is located in the dictionary
+        if (strcasecmp(list->word, word) == 0)
+        {
+            return true;
+        }
+    }
+
     return false;
 }
 
@@ -82,6 +93,9 @@ bool load(const char *dictionary)
         // Add new node into linked list
         new_node->next = table[index];
         table[index] = new_node;
+
+        // Increase dictionary size counter
+        dictionary_size++;
     }
 
     // Close dictionary file
@@ -93,10 +107,7 @@ bool load(const char *dictionary)
 // Returns number of words in dictionary if loaded, else 0 if not yet loaded
 unsigned int size(void)
 {
-    // TODO
-    // Keep track of the size of the dictionary as it is being loaded with a global variable
-    // Return the value of the global variable keeping track of the size
-    return 0;
+    return dictionary_size;
 }
 
 // Unloads dictionary from memory, returning true if successful, else false
