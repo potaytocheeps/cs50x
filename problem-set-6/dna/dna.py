@@ -1,3 +1,5 @@
+# Checks if a DNA sequence matches that of any individual from a database
+
 import csv
 import sys
 
@@ -24,11 +26,51 @@ def main():
     # Read DNA sequence file into a variable
     sequence = read_sequence(sequence_file)
 
-    # TODO: Find longest match of each STR in DNA sequence
+    # Find longest match of each STR in DNA sequence
+    sequence_data_count = get_str_count(subsequences, sequence)
 
-    # TODO: Check database for matching profiles
+    # Check database for matching profiles
+    check_for_match(database, subsequences, sequence_data_count)
 
     return
+
+
+# Checks if any individuals in database match the DNA sequence
+def check_for_match(database, subsequences, sequence_data_count):
+
+    # Check each person in database for matching profiles
+    for person in database:
+
+        # Iterate over each STR and compare data of person to data of DNA sequence
+        for subsequence in subsequences:
+
+            # If any of the current person's STR count does not match, continue to next person
+            if int(person[subsequence]) != sequence_data_count[subsequence]:
+                break
+
+        # If all STR counts match for current person, then DNA sequence has been identified
+        else:
+            print(person["name"])
+            break
+
+    # There was no match in database for DNA sequence
+    else:
+        print("No match")
+
+    return
+
+
+# Returns dictionary of counts of each STR found in DNA sequence
+def get_str_count(subsequences, sequence):
+
+    sequence_data_count = {}
+
+    # Find longest match of each STR in DNA sequence
+    for subsequence in subsequences:
+
+        sequence_data_count[subsequence] = longest_match(sequence, subsequence)
+
+    return sequence_data_count
 
 
 def longest_match(sequence, subsequence):
