@@ -14,9 +14,15 @@ def main():
     database_file = sys.argv[1]
     sequence_file = sys.argv[2]
 
-    # TODO: Read database file into a variable
+    # Get database data from file
+    result = read_database(database_file)
 
-    # TODO: Read DNA sequence file into a variable
+    # Store database data and STR sequences
+    database = result[0]
+    subsequences = result[1]
+
+    # Read DNA sequence file into a variable
+    sequence = read_sequence(sequence_file)
 
     # TODO: Find longest match of each STR in DNA sequence
 
@@ -61,6 +67,41 @@ def longest_match(sequence, subsequence):
 
     # After checking for runs at each character in seqeuence, return longest run found
     return longest_run
+
+
+def read_database(database_file):
+
+    # Initialize lists
+    database = []
+    subsequences = []
+
+    # Open database file
+    with open(database_file) as file:
+
+        # Read database file into a variable
+        reader = csv.DictReader(file)
+
+        # Store STR sequences, excluding the 'name' fieldname
+        subsequences = reader.fieldnames[1:]
+
+        # Store data of each indidivual
+        for row in reader:
+            database.append(row)
+
+    # Return list of data read from database file
+    return [database, subsequences]
+
+
+# Gets DNA sequence data from file
+def read_sequence(sequence_file):
+
+    sequence = ""
+
+    with open(sequence_file) as file:
+
+        sequence = file.read()
+
+    return sequence
 
 
 main()
