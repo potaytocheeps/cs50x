@@ -1,0 +1,53 @@
+- If songs.db contains the top 100 songs of one listener from 2018, how would
+  you characterize their audio aura?
+
+  > The whole list of top 100 songs in songs.db contain an average energy of 0.65906,
+    an average danceability of 0.71646, and an average valence of 0.484443. This means
+    that, on average, the songs had about a 6.6/10 energy, 7.2/10 danceability, and
+    4.8/10 valence (or positiveness, where a higher value indicates a positive track
+    and a lower value indicates a negative track).
+
+    Based on these average values, we can deduce that the audio aura would likely not
+    result in pink, as that implies that they view the world with a sense of optimism,
+    and given the low rating of valence, this seems unlikely. Orange implies high-energy,
+    which isn't necessarily reflected in the average energy of the songs.
+
+    As such, I would characterize this listener's audio aura as a mixture of yellow
+    and purple, seeing how the valence is about half-way through being positive and
+    negative, which I take it to mean that they can use that to fuel their focus as
+    well as a relatively low amount of energy in the songs to further help in focusing.
+    However, that amount of energy and relatively high amount of danceability means
+    that they can use the music to get amped up and moving through their days, as
+    described by a purple aura. So overall, I would characterize the audio aura as
+    passionate and goal-oriented.
+
+
+- Hypothesize about why the way you’ve calculated this aura might not be very
+  representative of the listener. What better ways of calculating this aura
+  would you propose?
+
+  > The way I've calculated this aura might not be very representative of the listener
+    because it doesn't take into account several other factors, such as the amount of
+    times a song was listened to, or the amount of days that music was listened to. This
+    could then mean that the audio aura calculated would only reflect a certain aspect
+    of the listener's habits. Additionally, the danceability, energy, and valence of a
+    song isn't necessarily objective, and could vary among listeners, meaning that a
+    listener could categorize a song differently, and the factors outlined above may not
+    exactly apply to them and represent them.
+
+    Perhaps rather than calculating the average energy, danceability, and valence of a
+    listener's top 100 songs, a variability of those same aspects of a song could be
+    calculated, where we can see what the highest and lowest values of songs are and
+    see by how much they vary in terms of energy, danceability, and valence. This could
+    give us more information than only calculating the averages would, as there may be some
+    outliers that could help better represent a person's audio aura for a given year.
+
+    Additionally, there are several other aspects of a song that are rated and provided
+    by the Spotify API, such as a song's loudness, speechiness, and tempo. If our
+    calculation for the audio aura included these values as well, we would be able to
+    have a better representation of the listener's taste in music and how it may
+    represent them and their personality. Songs with low values for loudness and speechiness
+    could show a better representation of a yellow aura, which is defined by a listener's
+    desire to fuel their need for focus, motivation, and self-improvement while reducing
+    their nerves. Songs with high tempo and high energy could reflect a listener's
+    orange aura denoting their rebellious and bold type.
