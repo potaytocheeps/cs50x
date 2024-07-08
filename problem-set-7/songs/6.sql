@@ -5,7 +5,7 @@ SELECT songs.name
 FROM songs
 JOIN artists
 ON songs.artist_id = artists.id
-WHERE artists.name = "Post Malone";
+WHERE artists.name = 'Post Malone';
 
 -- Using subqueries
 SELECT name
