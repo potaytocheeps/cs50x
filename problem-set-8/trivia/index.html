@@ -6,7 +6,54 @@
         <link href="styles.css" rel="stylesheet">
         <title>Trivia!</title>
         <script>
-            // TODO: Add code to check answers to questions
+            // Wait for DOM content to load
+            document.addEventListener("DOMContentLoaded", () =>
+            {
+                // Get all buttons from first question
+                let buttons = document.querySelectorAll(".first-question-answer");
+
+                // Add click event listener to each button from first question
+                buttons.forEach((button) =>
+                {
+                    button.addEventListener("click", (event) =>
+                    {
+                        // If button clicked is correct answer, change color to green
+                        if (event.target.innerText === "Summer Wars")
+                        {
+                            event.target.style.backgroundColor = 'green';
+                            document.querySelector("#first-answer-result").innerText = "Correct!";
+                        }
+                        // If answer is incorrect, change button color to red
+                        else
+                        {
+                            event.target.style.backgroundColor = 'red';
+                            document.querySelector("#first-answer-result").innerText = "Incorrect";
+                        }
+                    });
+                });
+
+                // Get text input element
+                let text_input = document.querySelector("#second-answer");
+
+                // Add event listener to confirmation button in second question
+                document.querySelector("#second-question-button").addEventListener("click", (event) =>
+                {
+                    // Get user inputted answer
+                    let answer = text_input.value;
+
+                    // Check answer correctness
+                    if (answer === "El Psy Congroo")
+                    {
+                        text_input.style.backgroundColor = "green";
+                        document.querySelector("#second-answer-result").innerText = "Correct!";
+                    }
+                    else
+                    {
+                        text_input.style.backgroundColor = "red";
+                        document.querySelector("#second-answer-result").innerText = "Incorrect";
+                    }
+                });
+            });
         </script>
     </head>
     <body>
@@ -18,13 +65,22 @@
             <div class="section">
                 <h2>Part 1: Multiple Choice </h2>
                 <hr>
-                <!-- TODO: Add multiple choice question here -->
+                <h3>Which movie is made by Studio Chizu?</h3>
+                <button class="first-question-answer">Ride Your Wave</button>
+                <button class="first-question-answer">The Secret World of Arrietty</button>
+                <button class="first-question-answer">Pompo the Cinephile</button>
+                <button class="first-question-answer">Summer Wars</button>
+                <button class="first-question-answer">Your Name</button>
+                <p id="first-answer-result"></p>
             </div>
 
             <div class="section">
                 <h2>Part 2: Free Response</h2>
                 <hr>
-                <!-- TODO: Add free response question here -->
+                <h3>Enter the secret password from Steins;Gate:</h3>
+                <input type="text" id="second-answer">
+                <button id="second-question-button">Confirm</button>
+                <p id="second-answer-result"></p>
             </div>
         </div>
     </body>
