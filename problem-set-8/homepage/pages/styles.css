@@ -1,0 +1,104 @@
+body {
+    height: 100vh;
+    text-transform: uppercase;
+}
+
+#the-girl-who-leapt-through-time {
+    background-color: #006DB8;
+    color: #FFFFFF;
+}
+
+/* Header */
+
+#logo {
+    margin-left: 1rem;
+    width: 2.25rem;
+}
+
+/* Main Section */
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    margin: 2rem 0 1rem;
+    text-align: center;
+}
+
+hr {
+    width: 70%;
+}
+
+
+/* Button section */
+
+#button-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+    margin: 1.5rem 1rem 2.5rem
+}
+
+.btn {
+    font-size: 0.9rem;
+    padding: 0.6rem 2rem;
+    text-transform: inherit;
+}
+
+.active-button {
+    background-color: #FFFFFF;
+    color: #000000;
+}
+
+/* Information section */
+
+#information-container {
+    align-self: stretch;
+    display: flex;
+    justify-content: center;
+}
+
+#carousel,
+#trailer {
+    margin: 0 1rem 2rem;
+    max-width: 50rem;
+}
+
+/* Trailer section */
+
+#trailer {
+    display: none;
+    flex: 1;
+    height: 28.1rem;
+}
+
+iframe {
+    flex: 1;
+}
+
+/* Synopsis section */
+
+#synopsis {
+    align-items: center;
+    display: none;
+    flex-wrap: wrap;
+    gap: 3.5rem;
+    justify-content: center;
+    margin: 0 2rem 2rem;
+}
+
+#paragraph-container {
+    flex: 1;
+    max-width: 25rem;
+    min-width: 15rem;
+    text-align: justify;
+    text-transform: none;
+}
+
+#synopsis-image img {
+    max-height: 30rem;
+}
