@@ -1,16 +1,19 @@
 body {
+    color: #FFFFFF;
     height: 100vh;
     text-transform: uppercase;
 }
 
 #the-girl-who-leapt-through-time {
     background-color: #006DB8;
-    color: #FFFFFF;
 }
 
 #summer-wars {
     background-color: #E68524;
-    color: #FFFFFF;
+}
+
+#wolf-children {
+    background-color: #13979B;
 }
 
 /* Header */
