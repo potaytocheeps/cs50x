@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () =>
     const synopsis = document.querySelector('#synopsis');
 
     // Get all buttons for displaying each section
-    const buttons = document.querySelectorAll('.btn-outline-light');
+    const buttons = document.querySelectorAll('.btn');
 
     // When a section button is clicked, display the section outlined by that button and hide
     // content of any other section that was previously displayed
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () =>
 
         buttons.forEach((button) =>
         {
-            addButtonActivity(button, event)
+            addButtonActivity(button, event);
         });
     });
 });
@@ -53,10 +53,18 @@ function addButtonActivity(button, event)
 {
     if (button === event.target)
     {
-        button.classList.add('active-button');
+        if (button.classList.contains('btn-outline-light'))
+        {
+            button.classList.add('active-light-button');
+        }
+        else
+        {
+            button.classList.add('active-dark-button');
+        }
     }
     else
     {
-        button.classList.remove('active-button');
+        button.classList.remove('active-light-button');
+        button.classList.remove('active-dark-button');
     }
 }

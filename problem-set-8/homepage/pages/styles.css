@@ -8,6 +8,11 @@ body {
     color: #FFFFFF;
 }
 
+#summer-wars {
+    background-color: #E68524;
+    color: #FFFFFF;
+}
+
 /* Header */
 
 #logo {
@@ -49,9 +54,14 @@ hr {
     text-transform: inherit;
 }
 
-.active-button {
+.active-light-button {
     background-color: #FFFFFF;
     color: #000000;
+}
+
+.active-dark-button {
+    background-color: #000000;
+    color: #FFFFFF;
 }
 
 /* Information section */
