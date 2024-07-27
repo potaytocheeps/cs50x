@@ -16,6 +16,10 @@ body {
     background-color: #13979B;
 }
 
+#the-boy-and-the-beast {
+    background-color: #CD2F2C;
+}
+
 /* Header */
 
 #logo {
@@ -73,6 +77,7 @@ hr {
     align-self: stretch;
     display: flex;
     justify-content: center;
+    /* margin: 0 1rem 2rem; */
 }
 
 #carousel,
