@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () =>
 
         buttons.forEach((button) =>
         {
-            addButtonActivity(button, event)
+            addButtonActivity(button, event);
         });
     });
 
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () =>
 
         buttons.forEach((button) =>
         {
-            addButtonActivity(button, event)
+            addButtonActivity(button, event);
         });
     });
 

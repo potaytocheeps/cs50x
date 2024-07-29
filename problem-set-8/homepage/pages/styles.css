@@ -4,6 +4,8 @@ body {
     text-transform: uppercase;
 }
 
+/* Color styles obtained from Funimation's Hosoda Collection blu-ray releases */
+
 #the-girl-who-leapt-through-time {
     background-color: #145A7E;
 }
@@ -20,10 +22,14 @@ body {
     background-color: #CD2F2C;
 }
 
+/* Color style obtained from AllTheAnime's collector's edition release */
+
 #mirai {
     background-color: #FFFFFF;
     color: #000000;
 }
+
+/* Color style obtained from GKIDS's collector's edition release */
 
 #belle {
     background-color: #1E1834;
