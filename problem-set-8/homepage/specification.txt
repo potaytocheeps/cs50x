@@ -1,0 +1,10 @@
+     HTML tags used: <a>, <button>, <div>, <h1>, <header>, <hr>, <iframe>, <img>, <li>, <link>,
+                     <main>, <meta>, <nav>, <p>, <script>, <span>, <ul>
+
+CSS properties used: align-items, align-self, background-color, color, display, flex,
+                     flex-direction, flex-wrap, font-size, gap, height, justify-content, margin,
+                     padding, text-align, text-transform, width
+
+I chose to use Bootstrap to create a header, buttons, and a carousel of images, and JavaScript
+to give interactivity to the buttons, where clicking on each button will display a different piece
+of content about a movie.
