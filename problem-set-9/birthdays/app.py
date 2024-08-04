@@ -64,3 +64,16 @@ def index():
         # Display the entries in the database on index.html
         return render_template("index.html", birthdays=birthdays)
 
+
+@app.route("/delete", methods=["POST"])
+def delete():
+
+    # Get id of birthday to delete from database
+    id = request.form.get("id")
+
+    # Delete birthday from database
+    db.execute("DELETE FROM birthdays WHERE id = ?", id)
+
+    # Return to index page to show the table
+    return redirect("/")
+
