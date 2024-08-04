@@ -3,7 +3,7 @@
 <html lang="en">
     <head>
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
-        <link href="../static/styles.css" rel="stylesheet">
+        <link href="/static/styles.css" rel="stylesheet">
         <title>Birthdays</title>
     </head>
     <body>
@@ -39,6 +39,12 @@
                             <tr>
                                 <td>{{ birthday.name }}</td>
                                 <td>{{ birthday.month }}/{{ birthday.day }}</td>
+                                <td>
+                                    <form action="/edit" method="post">
+                                        <input name="id" type="hidden" value="{{ birthday.id }}">
+                                        <button type="submit">Edit</button>
+                                    </form>
+                                </td>
                                 <td>
                                     <form action="/delete" method="post">
                                         <input name="id" type="hidden" value="{{ birthday.id }}">

@@ -65,6 +65,7 @@ def index():
         return render_template("index.html", birthdays=birthdays)
 
 
+# Deletes a birthday from the database
 @app.route("/delete", methods=["POST"])
 def delete():
 
@@ -75,5 +76,47 @@ def delete():
     db.execute("DELETE FROM birthdays WHERE id = ?", id)
 
     # Return to index page to show the table
+    return redirect("/")
+
+
+# Edits a birthday in the database
+@app.route("/edit", methods=["POST"])
+def edit():
+
+    # Get id of birthday to edit in database
+    id = request.form.get("id")
+
+    # Get the birthday data to edit from the database
+    birthday = db.execute("SELECT * FROM birthdays WHERE id = ?", id)
+
+    # Get the user's inputs from the form and validate them
+    name = request.form.get("name")
+    if not name:
+        return render_template("edit.html", birthday=birthday[0])
+
+    month = request.form.get("month")
+    if not month:
+        return render_template("edit.html", birthday=birthday[0])
+    try:
+        month = int(month)
+    except ValueError:
+        return render_template("edit.html", birthday=birthday[0])
+    if month < 1 or month > 12:
+        return render_template("edit.html", birthday=birthday[0])
+
+    day = request.form.get("day")
+    if not day:
+        return render_template("edit.html", birthday=birthday[0])
+    try:
+        day = int(day)
+    except ValueError:
+        return render_template("edit.html", birthday=birthday[0])
+    if day < 1 or day > 31:
+        return render_template("edit.html", birthday=birthday[0])
+
+    # Edit birthday in database with updated data
+    db.execute("UPDATE birthdays SET (name, month, day) = (?, ?, ?) WHERE id = ?", name, month, day, id)
+
+    # Return to index page to show the updated table
     return redirect("/")
 
