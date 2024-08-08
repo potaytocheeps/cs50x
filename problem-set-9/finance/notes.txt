@@ -1,0 +1,14 @@
+The following is the command used to create a table to keep track of users' stock
+purchases. It enables me to keep track of who bought what, at what price, and when,
+as outlined by the CS50's problem specification.
+
+CREATE TABLE purchases (
+    id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    stock_symbol TEXT NOT NULL,
+    shares_amount INTEGER NOT NULL,
+    stock_price NUMERIC NOT NULL,
+    transaction_date TEXT NOT NULL,
+    PRIMARY KEY(id),
+    FOREIGN KEY(user_id) REFERENCES users(id)
+);

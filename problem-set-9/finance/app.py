@@ -42,7 +42,71 @@ def index():
 @login_required
 def buy():
     """Buy shares of stock"""
-    return apology("TODO")
+
+    # User reached route via POST (as by submitting a form via POST)
+    if request.method == "POST":
+        # Get user's form submissions
+        symbol = request.form.get("symbol")
+        shares = request.form.get("shares")
+
+        # Ensure user submitted inputs
+        if not symbol:
+            return apology("must submit stock's symbol")
+        elif not shares:
+            return apology("must submit amount of shares")
+
+        # Get stock's current price
+        quote = lookup(symbol)
+
+        # Ensure symbol is valid
+        if not quote:
+            return apology("there is no stock associated with that symbol")
+
+        # Convert shares to integer
+        try:
+            shares = int(shares)
+        except ValueError:
+            return apology("must submit an integer for amount of shares")
+
+        # Ensure shares is a positive integer
+        if shares < 1:
+            return apology("must submit a positive integer for amount of shares")
+
+        # Get user's current cash amount by querying the users table in the database
+        cash = db.execute("SELECT cash FROM users WHERE id = ?", session.get("user_id"))
+
+        # Ensure that a list was correctly returned from querying the database
+        if not cash:
+            return apology("there was an error retrieving cash")
+
+        # Retrieve cash value from list of dictionaries and convert to float for calculations
+        cash = float(cash[0].get("cash"))
+
+        # Ensure user has enough cash to buy shares
+        if cash < (quote.get("price") * shares):
+            return apology("insufficient cash")
+
+        # Add transaction to database
+        db.execute("INSERT INTO purchases " +
+                   "(user_id, stock_symbol, shares_amount, stock_price, transaction_date) " +
+                   "VALUES(?, ?, ?, ?, datetime('now'))",
+                   session.get("user_id"), symbol, shares, quote.get("price"))
+
+        # Subtract total shares price from user's account
+        cash -= (quote.get("price") * shares)
+
+        # Update users table to reflect user's new balance after buying their shares
+        db.execute("UPDATE users " +
+                   "SET cash = ? " +
+                   "WHERE id = ?",
+                   cash, session.get("user_id"))
+
+        # Once having bought their shares, redirect user to homepage ("/")
+        return redirect("/")
+
+    # User reached route via GET (as by clicking a link or via redirect)
+    else:
+        return render_template("buy.html")
 
 
 @app.route("/history")
