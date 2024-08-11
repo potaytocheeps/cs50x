@@ -35,7 +35,46 @@ def after_request(response):
 @login_required
 def index():
     """Show portfolio of stocks"""
-    return apology("TODO")
+
+    # Get stocks and number of shares per stock owned
+    portfolio = db.execute("SELECT stock_symbol, SUM(shares_amount) as shares " +
+                           "FROM purchases " +
+                           "WHERE user_id = ? " +
+                           "GROUP BY stock_symbol",
+                           session.get("user_id"))
+
+    # Declare variable to hold user's total balance
+    total_balance = 0
+
+    # Iterate over each stock in portfolio
+    for stock in portfolio:
+        # Get the current price of each stock owned
+        stock["current_price"] = lookup(stock.get("stock_symbol")).get("price")
+
+        # Calculate total value of each holding
+        stock["total_value"] = stock.get("shares") * stock.get("current_price")
+
+        # Add total value of each holding to user's total balance
+        total_balance += stock.get("total_value")
+
+        # Convert values to usd format
+        stock["current_price"] = usd(stock["current_price"])
+        stock["total_value"] = usd(stock["total_value"])
+
+    # Get user's current cash amount by querying the users table in the database
+    cash = db.execute("SELECT cash FROM users WHERE id = ?", session.get("user_id"))
+
+    # Ensure that a list was correctly returned from querying the database
+    if not cash:
+        return apology("there was an error retrieving cash")
+
+    # Retrieve cash value from list of dictionaries
+    cash = cash[0].get("cash")
+
+    # Add user's current amount of cash to their total balance
+    total_balance += cash
+
+    return render_template("index.html", portfolio=portfolio, cash=usd(cash), total=usd(total_balance))
 
 
 @app.route("/buy", methods=["GET", "POST"])
