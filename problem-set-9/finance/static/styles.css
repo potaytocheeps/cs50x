@@ -79,3 +79,8 @@ nav .navbar-brand .green
     background-color: #537fbe;
     color: #ffffff;
 }
+
+/* Sell Page */
+select {
+    padding: 0.5rem 0.75rem;
+}

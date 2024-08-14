@@ -37,10 +37,9 @@ def index():
     """Show portfolio of stocks"""
 
     # Get stocks and number of shares per stock owned
-    portfolio = db.execute("SELECT stock_symbol, SUM(shares_amount) as shares " +
-                           "FROM purchases " +
-                           "WHERE user_id = ? " +
-                           "GROUP BY stock_symbol",
+    portfolio = db.execute("SELECT stock_symbol, shares_amount as shares " +
+                           "FROM user_portfolios " +
+                           "WHERE user_id = ? ",
                            session.get("user_id"))
 
     # Declare variable to hold user's total balance
@@ -126,10 +125,17 @@ def buy():
             return apology("insufficient cash")
 
         # Add transaction to database
-        db.execute("INSERT INTO purchases " +
-                   "(user_id, stock_symbol, shares_amount, stock_price, transaction_date) " +
-                   "VALUES(?, ?, ?, ?, datetime('now'))",
-                   session.get("user_id"), symbol, shares, quote.get("price"))
+        db.execute("INSERT INTO transactions " +
+                   "(user_id, stock_symbol, shares_amount, stock_price, transaction_type, transaction_date) " +
+                   "VALUES(?, ?, ?, ?, ?, datetime('now'))",
+                   session.get("user_id"), symbol.upper(), shares, quote.get("price"), "buy")
+
+        # Update user_portfolios table in database to reflect this transaction
+        db.execute("INSERT INTO user_portfolios (user_id, stock_symbol, shares_amount) " +
+                   "VALUES(?, ?, ?) " +
+                   "ON CONFLICT(user_id, stock_symbol) DO UPDATE SET " +
+                   "shares_amount = shares_amount + ? ",
+                   session.get("user_id"), symbol.upper(), shares, shares)
 
         # Subtract total shares price from user's account
         cash -= (quote.get("price") * shares)
@@ -278,4 +284,114 @@ def register():
 @login_required
 def sell():
     """Sell shares of stock"""
-    return apology("TODO")
+
+    # User reached this route via POST
+    if request.method == "POST":
+        # Get user's form submissions
+        symbol = request.form.get("symbol")
+        shares_to_sell = request.form.get("shares")
+
+        # Get list of stocks owned by user
+        stocks_owned = db.execute("SELECT stock_symbol " +
+                                  "FROM user_portfolios " +
+                                  "WHERE user_id = ?",
+                                  session.get("user_id"))
+
+        # Create a list of the different values in the list of dictionaries
+        stocks_owned = [stock['stock_symbol'] for stock in stocks_owned]
+
+        # Ensure user submitted inputs, and that the stock submitted is a stock that the user owns
+        if not symbol:
+            return apology("must submit stock's symbol")
+        elif not symbol in stocks_owned:
+            return apology("you do not own any shares of that stock")
+        elif not shares_to_sell:
+            return apology("must submit amount of shares")
+
+        # Get stock's current price
+        quote = lookup(symbol)
+
+        # Ensure symbol is valid
+        if not quote:
+            return apology("there is no stock associated with that symbol")
+
+        # Convert shares_to_sell to integer
+        try:
+            shares_to_sell = int(shares_to_sell)
+        except ValueError:
+            return apology("must submit an integer for amount of shares")
+
+        # Ensure shares_to_sell is a positive integer
+        if shares_to_sell < 1:
+            return apology("must submit a positive integer for amount of shares")
+
+        # Get amount of shares owned for stock submitted
+        shares_owned = db.execute("SELECT shares_amount " +
+                                  "FROM user_portfolios " +
+                                  "WHERE stock_symbol = ? AND user_id = ?",
+                                  symbol, session.get("user_id"))
+
+        # Ensure that a list of shares_owned was correctly returned from querying the database
+        if not shares_owned:
+            return apology("there was an error retrieving amount of shares owned")
+
+        # Extract integer from result of querying the database
+        shares_owned = shares_owned[0].get("shares_amount")
+
+        # Ensure user has enough shares to sell
+        if shares_owned < shares_to_sell:
+            return apology("insufficient shares owned")
+
+        # Get user's current cash amount by querying the users table in the database
+        cash = db.execute("SELECT cash FROM users WHERE id = ?", session.get("user_id"))
+
+        # Ensure that a list was correctly returned from querying the database
+        if not cash:
+            return apology("there was an error retrieving cash")
+
+        # Retrieve cash value from list of dictionaries and convert to float for calculations
+        cash = float(cash[0].get("cash"))
+
+        # Add transaction to database
+        db.execute("INSERT INTO transactions " +
+                   "(user_id, stock_symbol, shares_amount, stock_price, transaction_type, transaction_date) " +
+                   "VALUES(?, ?, ?, ?, ?, datetime('now'))",
+                   session.get("user_id"), symbol.upper(), shares_to_sell, quote.get("price"), "sell")
+
+        # Update user_portfolios table in database to reflect this transaction
+        db.execute("UPDATE user_portfolios " +
+                   "SET shares_amount = shares_amount - ? " +
+                   "WHERE user_id = ? AND stock_symbol = ?",
+                    shares_to_sell, session.get("user_id"), symbol.upper())
+
+        # Remove sold stock from user's portfolio if they have 0 shares left
+        if shares_owned - shares_to_sell == 0:
+            db.execute("DELETE FROM user_portfolios " +
+                       "WHERE user_id = ? AND stock_symbol = ? AND shares_amount = 0",
+                       session.get("user_id"), symbol)
+
+        # Add total price of shares sold to user's cash amount
+        cash += (quote.get("price") * shares_to_sell)
+
+        # Update users table to reflect user's new balance after selling their shares
+        db.execute("UPDATE users " +
+                   "SET cash = ? " +
+                   "WHERE id = ?",
+                   cash, session.get("user_id"))
+
+        # Once having sold their shares, redirect user to homepage ("/")
+        return redirect("/")
+
+    # User reached this route via GET
+    else:
+        # Get list of stocks owned by user
+        stocks_owned = db.execute("SELECT stock_symbol " +
+                                  "FROM user_portfolios " +
+                                  "WHERE user_id = ?",
+                                  session.get("user_id"))
+
+        # Create a list of the different values in the list of dictionaries
+        stocks_owned = [stock['stock_symbol'] for stock in stocks_owned]
+
+        # Pass list of stocks owned by user to template
+        return render_template("sell.html", stocks=stocks_owned)

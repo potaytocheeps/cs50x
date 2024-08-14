@@ -12,3 +12,53 @@ CREATE TABLE purchases (
     PRIMARY KEY(id),
     FOREIGN KEY(user_id) REFERENCES users(id)
 );
+
+
+While implementing the sell route of the Finance problem, I realized that I would need to keep
+track of the sold stocks in addition to just the purchases, so I will be modifying the table to
+reflect those transactions as well, and will be changing its name from purchases to transactions,
+as I had originally planned on naming it
+
+CREATE TABLE transactions (
+    id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    stock_symbol TEXT NOT NULL,
+    shares_amount INTEGER NOT NULL,
+    stock_price NUMERIC NOT NULL,
+    transaction_type TEXT NOT NULL,
+    transaction_date TEXT NOT NULL,
+    PRIMARY KEY(id),
+    FOREIGN KEY(user_id) REFERENCES users(id)
+);
+
+
+I need to create a new table to keep track of the stocks and amount of shares a user currently owns,
+this table will be updated alongside the transactions table any time the user buys or sells shares,
+and it will be the easiest way to keep track of which shares the user owns at any given time.
+
+CREATE TABLE user_portfolios (
+    user_id INTEGER NOT NULL,
+    stock_symbol TEXT NOT NULL,
+    shares_amount INTEGER NOT NULL,
+    FOREIGN KEY(user_id) REFERENCES users(id)
+)
+
+
+I created a UNIQUE INDEX for two of the columns in the user_portfolios table which makes it so that
+I can update the table instead of inserting a new row to it if the row already exists (a SQLite
+operation known as UPSERT), whenever a user buys shares for a stock.
+
+CREATE UNIQUE INDEX stocks_owned
+    ON user_portfolios(user_id, stock_symbol);
+
+
+The way this operation works is demonstrated in app.py in the /buy route, where I try to insert
+into the user_portfolios table a new row of data, but due to the constraint of a UNIQUE INDEX, if
+it turns out that the row of data that I want to insert into the table already exists, then the
+data will instead be updated to reflect the new amount of shares the user owns.
+
+db.execute("INSERT INTO user_portfolios (user_id, stock_symbol, shares_amount) " +
+            "VALUES(?, ?, ?) " +
+            "ON CONFLICT(user_id, stock_symbol) DO UPDATE SET " +
+            "shares_amount = shares_amount + ? ",
+            session.get("user_id"), symbol.upper(), shares, shares)
