@@ -40,42 +40,42 @@ nav .navbar-brand .green
 }
 
 /* Index Page Table */
-.portfolio-table {
+.table-style {
     margin: 2em auto 0;
     width: 70%;
     text-align: right;
 }
 
-.portfolio-table thead tr {
+.table-style thead tr {
     border-bottom: 1px dashed #808080;
 }
 
-.portfolio-table tfoot tr:nth-child(1) {
+.table-style tfoot tr:nth-child(1) {
     border-top: 1px dashed #808080;
 }
 
-.portfolio-table thead tr th,
-.portfolio-table tfoot tr th,
-.portfolio-table tfoot tr td {
+.table-style thead tr th,
+.table-style tfoot tr th,
+.table-style tfoot tr td {
     padding: .75em;
     font-size: 1.05rem;
     letter-spacing: 1px;
 }
 
-.portfolio-table tbody tr td {
+.table-style tbody tr td {
     padding: .75em;
 }
 
-.portfolio-table thead tr th:nth-child(1),
-.portfolio-table tbody tr td:nth-child(1) {
+.table-style thead tr th:nth-child(1),
+.table-style tbody tr td:nth-child(1) {
     text-align: left;
 }
 
-.portfolio-table tbody tr:nth-child(even) {
+.table-style tbody tr:nth-child(even) {
     background-color: #f0f0f0;
 }
 
-.portfolio-table tbody tr:hover {
+.table-style tbody tr:hover {
     background-color: #537fbe;
     color: #ffffff;
 }

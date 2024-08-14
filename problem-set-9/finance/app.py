@@ -158,7 +158,31 @@ def buy():
 @login_required
 def history():
     """Show history of transactions"""
-    return apology("TODO")
+
+    # Get list of transactions from the transactions table
+    transactions = db.execute("SELECT stock_symbol, shares_amount, stock_price, transaction_type, transaction_date " +
+                              "FROM transactions " +
+                              "WHERE user_id = ?",
+                              session.get("user_id"))
+
+    # Iterate over each transaction
+    for transaction in transactions:
+        # Calculate total value for each transaction
+        transaction["total_value"] = usd(transaction.get("stock_price") * transaction.get("shares_amount"))
+
+        # Convert stock price value to usd format
+        transaction["stock_price"] = usd(transaction.get("stock_price"))
+
+        # Format each transaction to display whether the user bought or sold shares for that transaction
+        if transaction.get("transaction_type") == "buy":
+            transaction["total_value"] = "-" + transaction["total_value"]
+            transaction["shares_amount"] = "+" + str(transaction.get("shares_amount"))
+        else:
+            transaction["total_value"] = "+" + transaction["total_value"]
+            transaction["shares_amount"] = "-" + str(transaction.get("shares_amount"))
+
+    # Display table showing history of user's transactions
+    return render_template("history.html", transactions=transactions)
 
 
 @app.route("/login", methods=["GET", "POST"])
