@@ -228,6 +228,47 @@ def logout():
     return redirect("/")
 
 
+@app.route("/password", methods=["GET", "POST"])
+@login_required
+def password():
+    """Change password"""
+
+    # User reached this route via POST
+    if request.method == "POST":
+        # Ensure user submitted inputs
+        if not request.form.get("old_password"):
+            return apology("must submit old password")
+        elif not request.form.get("new_password"):
+            return apology("must submit new password")
+
+        # Get user's data from the users table
+        rows = db.execute("SELECT hash " +
+                          "FROM users " +
+                          "WHERE id = ?",
+                          session.get("user_id"))
+
+        # Confirm that the old password matches the password in the database
+        if not check_password_hash(rows[0].get("hash"), request.form.get("old_password")):
+            return apology("old password is invalid")
+
+        # Ensure old password and new password are different
+        if check_password_hash(rows[0].get("hash"), request.form.get("new_password")):
+            return apology("new password must be different from old password")
+
+        # Update users table to change the old password to the new password
+        db.execute("UPDATE users " +
+                   "SET hash = ? " +
+                   "WHERE id = ?",
+                   generate_password_hash(request.form.get("new_password")), session.get("user_id"))
+
+        # Return user to homepage
+        return redirect("/")
+
+    # User reached this route via GET
+    else:
+        return render_template("password.html")
+
+
 @app.route("/quote", methods=["GET", "POST"])
 @login_required
 def quote():
