@@ -56,10 +56,6 @@ def index():
         # Add total value of each holding to user's total balance
         total_balance += stock.get("total_value")
 
-        # Convert values to usd format
-        stock["current_price"] = usd(stock["current_price"])
-        stock["total_value"] = usd(stock["total_value"])
-
     # Get user's current cash amount by querying the users table in the database
     cash = db.execute("SELECT cash FROM users WHERE id = ?", session.get("user_id"))
 
@@ -73,7 +69,7 @@ def index():
     # Add user's current amount of cash to their total balance
     total_balance += cash
 
-    return render_template("index.html", portfolio=portfolio, cash=usd(cash), total=usd(total_balance))
+    return render_template("index.html", portfolio=portfolio, cash=cash, total=total_balance)
 
 
 @app.route("/buy", methods=["GET", "POST"])
@@ -169,9 +165,6 @@ def history():
     for transaction in transactions:
         # Calculate total value for each transaction
         transaction["total_value"] = usd(transaction.get("stock_price") * transaction.get("shares_amount"))
-
-        # Convert stock price value to usd format
-        transaction["stock_price"] = usd(transaction.get("stock_price"))
 
         # Format each transaction to display whether the user bought or sold shares for that transaction
         if transaction.get("transaction_type") == "buy":
@@ -273,19 +266,19 @@ def register():
     if request.method == "POST":
         # Ensure username was submitted
         if not request.form.get("username"):
-            return apology("must provide username", 403)
+            return apology("must provide username")
 
         # Ensure password was submitted
         if not request.form.get("password"):
-            return apology("must provide password", 403)
+            return apology("must provide password")
 
         # Ensure password confirmation was submitted
         if not request.form.get("confirmation"):
-            return apology("must provide password confirmation", 403)
+            return apology("must provide password confirmation")
 
         # Ensure that password and its confirmation match
         if request.form.get("password") != request.form.get("confirmation"):
-            return apology("password and confirmation do not match", 403)
+            return apology("password and confirmation do not match")
 
         # Try to insert new user into users table, display apology if username is already in database
         try:
@@ -293,7 +286,7 @@ def register():
                        request.form.get("username"),
                        generate_password_hash(request.form.get("password")))
         except ValueError:
-            return apology("username is already taken, try a new one", 403)
+            return apology("username is already taken, try a new one")
 
         # Redirect to login page
         return redirect("/login")

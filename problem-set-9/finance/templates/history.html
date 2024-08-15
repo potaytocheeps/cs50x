@@ -22,7 +22,7 @@
                 <tr>
                     <td>{{ transaction.stock_symbol }}</td>
                     <td>{{ transaction.shares_amount }}</td>
-                    <td>{{ transaction.stock_price }}</td>
+                    <td>{{ transaction.stock_price | usd }}</td>
                     <td>{{ transaction.total_value }}</td>
                     <td>{{ transaction.transaction_date }}</td>
                 </tr>

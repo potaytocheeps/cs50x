@@ -21,19 +21,19 @@
                 <tr>
                     <td>{{ row.stock_symbol }}</td>
                     <td>{{ row.shares }}</td>
-                    <td>{{ row.current_price }}</td>
-                    <td>{{ row.total_value }}</td>
+                    <td>{{ row.current_price | usd }}</td>
+                    <td>{{ row.total_value | usd }}</td>
                 </tr>
             {% endfor %}
         </tbody>
         <tfoot>
             <tr>
                 <th scope="row" colspan="3">Cash</th>
-                <td>{{ cash }}</td>
+                <td>{{ cash | usd }}</td>
             </tr>
             <tr>
               <th scope="row" colspan="3">TOTAL BALANCE</th>
-              <td>{{ total }}</td>
+              <td>{{ total | usd }}</td>
           </tr>
         </tfoot>
     </table>
