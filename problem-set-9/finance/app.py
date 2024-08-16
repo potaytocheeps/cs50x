@@ -150,6 +150,54 @@ def buy():
         return render_template("buy.html")
 
 
+@app.route("/deposit", methods=["GET", "POST"])
+@login_required
+def deposit():
+    """Deposit more cash into account"""
+
+    # User reached route via POST
+    if request.method == "POST":
+        # Get deposit amount
+        deposit = request.form.get("deposit")
+
+        # Ensure user submitted input
+        if not deposit:
+            return apology("must submit amount to deposit")
+
+        # Ensure deposit amount is a float
+        try:
+            deposit = float(deposit)
+        except ValueError:
+            return apology("must submit a number for amount to deposit")
+
+        # Ensure deposit is a positive float
+        if deposit < 1:
+            return apology("must submit a number greater than 1 for amount to deposit")
+
+        # Get user's current cash amount by querying the users table in the database
+        cash = db.execute("SELECT cash FROM users WHERE id = ?", session.get("user_id"))
+
+        # Ensure that a list was correctly returned from querying the database
+        if not cash:
+            return apology("there was an error retrieving cash")
+
+        # Retrieve cash value from list of dictionaries and convert to float for calculations
+        cash = float(cash[0].get("cash"))
+
+        # Update database to reflect new cash amount after deposit
+        db.execute("UPDATE users " +
+                   "SET cash = cash + ? " +
+                   "WHERE id = ?",
+                   deposit, session.get("user_id"))
+
+        # Redirect user to homepage
+        return redirect("/")
+
+    # User reached route via GET
+    else:
+        return render_template("deposit.html")
+
+
 @app.route("/history")
 @login_required
 def history():
