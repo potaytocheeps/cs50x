@@ -12,6 +12,7 @@
             <tr>
                 <th scope="col">Stock</th>
                 <th scope="col">Shares</th>
+                <th class="form-table-cell" scope="col">Buy/Sell</th>
                 <th scope="col">Current Price</th>
                 <th scope="col">TOTAL VALUE</th>
             </tr>
@@ -21,6 +22,13 @@
                 <tr>
                     <td>{{ row.stock_symbol }}</td>
                     <td>{{ row.shares }}</td>
+                    <td class="form-table-cell">
+                        <form class="index-form" method="post">
+                            <input name="symbol" type="hidden" value="{{ row.stock_symbol }}">
+                            <input class="mx-auto transaction-amount" name="shares" placeholder="0" type="number">
+                            <button class="btn btn-outline-dark submit-button" type="submit">Buy</button>
+                        </form>
+                    </td>
                     <td>{{ row.current_price | usd }}</td>
                     <td>{{ row.total_value | usd }}</td>
                 </tr>
@@ -28,13 +36,62 @@
         </tbody>
         <tfoot>
             <tr>
-                <th scope="row" colspan="3">Cash</th>
+                <th scope="row" colspan="4">Cash</th>
                 <td>{{ cash | usd }}</td>
             </tr>
             <tr>
-              <th scope="row" colspan="3">TOTAL BALANCE</th>
+              <th scope="row" colspan="4">TOTAL BALANCE</th>
               <td>{{ total | usd }}</td>
           </tr>
         </tfoot>
     </table>
+
+    <script>
+        // Wait for DOM content to load
+        document.addEventListener("DOMContentLoaded", (event) =>
+        {
+            // Get elements from DOM
+            const forms = document.querySelectorAll(".index-form");
+            const transaction_inputs = document.querySelectorAll(".transaction-amount");
+
+            // Iterate over every input element
+            transaction_inputs.forEach(function(transaction_amount)
+            {
+                // Listen for whenever the value in the input changes
+                transaction_amount.addEventListener("input", function(event)
+                {
+                    // Get the button associated with the form of this table row
+                    const submit_button = event.target.parentElement.querySelector(".submit-button");
+
+                    // Change functionality of submit button depending on value of input element
+                    if (parseInt(event.target.value) === 0)
+                    {
+                        submit_button.disabled = true;
+                    }
+                    else
+                    {
+                        submit_button.disabled = false;
+                        submit_button.innerHTML = parseInt(event.target.value) > 0 ? "Buy" : "Sell";
+                    }
+                });
+            })
+
+            // Iterate over every form element
+            forms.forEach((form) =>
+            {
+                // Listen for submit event
+                form.addEventListener("submit", function(event)
+                {
+                    // Get the input associated with the form of this table row
+                    const transaction_amount = event.target.querySelector(".transaction-amount");
+
+                    // Change form submission route. Buy shares if input value is positive, sell shares otherwise
+                    form.action = parseInt(transaction_amount.value) > 0 ? "/buy" : "/sell";
+
+                    // Replace input value with its absolute value
+                    transaction_amount.value = Math.abs(transaction_amount.value);
+                });
+            });
+        });
+    </script>
 {% endblock %}

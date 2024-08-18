@@ -80,6 +80,18 @@ nav .navbar-brand .green
     color: #ffffff;
 }
 
+.form-table-cell {
+    width: 25%;
+}
+
+.transaction-amount {
+    width: 40%;
+}
+
+.submit-button {
+    margin-left: 0.75rem;
+}
+
 /* Sell Page */
 select {
     padding: 0.5rem 0.75rem;
